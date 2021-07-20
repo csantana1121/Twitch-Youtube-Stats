@@ -43,4 +43,22 @@
     {% if not text=='' %}
     <p>Description: {{ text }}</p>
     {% endif %}
+    {% if not date=='' %}
+    <p>Time of creation: {{ date }}</p>
+    {% endif %}
+    {% if not country=='' %}
+    <p>Country of Origin: {{ country }}</p>
+    {% endif %}
+    {% if not views=='' %}
+    <p>Number of views: {{ views }}</p>
+    {% endif %}
+    {% if not subs=='' %}
+    <p>Number of subscribers: {{ subs }}</p>
+    {% endif %}
+    {% if not numvids=='' %}
+    <p>Total Videos: {{ numvids }}</p>
+    {% endif %}
+    {% if not vidurl=='' %}
+    <iframe width="560" height="315" src= {{vidurl}} frameborder="0" allowfullscreen></iframe>
+    {% endif %}
 {% endblock content %}

@@ -47,18 +47,23 @@ def youtube():
     form = Searchuser()
     if form.validate_on_submit():
         api_key = "AIzaSyCdon2Ht4qsO50eVJpu9nJO5iJx7TSIOhM"
-        channel_id = get_channel_id(api_key, form.username.data)
+        api_key2 = "AIzaSyAG-YgDxNNokUoSl8R3wPrakujPLXOE2fw"
+        channel_id = get_channel_id(api_key2, form.username.data)
         json = get_stats(channel_id, api_key)
         values = extract_info_json(json)
-        dtfr_without_vals = construct_dtfr()
-        dtfr_with_vals = insert_values_dtfr(dtfr_without_vals, values)
-        result = dtfr_with_vals.to_html()
-        text_file = open("templates/youtubedata.html", "w")
-        text_file.write(result)
-        text_file.close()
+        playlist_id = get_playlists_id(channel_id, api_key2)
+        video_id = get_playlists_items(playlist_id, api_key2)
+        video = video_url(video_id)
+        print(video)
+#         dtfr_without_vals = construct_dtfr()
+#         dtfr_with_vals = insert_values_dtfr(dtfr_without_vals, values)
+#         result = dtfr_with_vals.to_html()
+#         text_file = open("templates/youtubedata.html", "w")
+#         text_file.write(result)
+#         text_file.close()
         
-        return render_template('youtube.html', title='Twitch', form=form, image=values[-1], channel_name=values[0],text = values[1])
-    return render_template('youtube.html', title='Twitch', form=form, image='', channel_name='',text ='')
+        return render_template('youtube.html', title='Twitch', form=form, image=values[-1], channel_name=values[0],text = values[1], date =values[6],country=values[2],views=values[3],subs=values[4],numvids=values[5],vidurl=video)
+    return render_template('youtube.html', title='Twitch', form=form, image='', channel_name='', text ='', date='', country='', views= '', subs='',numvids='',vidurl='')
 
 @app.route("/youtube_output")
 def youtube_output():
