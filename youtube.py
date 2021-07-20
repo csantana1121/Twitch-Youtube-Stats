@@ -2,8 +2,10 @@ import requests
 import pandas as pd
 
 
-def get_channel_id(api_key):
-    channel = input("Enter channel name: ")
+def get_input():
+     channel = input("Enter channel name: ")
+
+def get_channel_id(api_key, channel):
     url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&maxResults=1&q=" + channel + "&key=" + api_key
 
     response = requests.get(url)
@@ -24,13 +26,13 @@ def extract_info_json(data):
     description = data['items'][0]['snippet']['description']
     
     key = 'country'
-    country = None
+    country = ""
     if key in data['items'][0]['snippet']:
         country = data['items'][0]['snippet']['country']
         
     num_views = data['items'][0]['statistics']['viewCount']
     
-    num_subscribers = None
+    num_subscribers = ""
     if data['items'][0]['statistics']['hiddenSubscriberCount'] is False:
         num_subscribers = data['items'][0]['statistics']['subscriberCount']
     
@@ -54,7 +56,7 @@ def insert_values_dtfr(dtfr, values):
     return dtfr
 
 
-def main():
+def print_dataframe():
     api_key = "AIzaSyCdon2Ht4qsO50eVJpu9nJO5iJx7TSIOhM"
     channel_id = get_channel_id(api_key)
     stats = get_stats(channel_id, api_key)
@@ -64,7 +66,4 @@ def main():
     
     print(dtfr_with_vals)
     
-    
-if __name__ == "__main__":
-    main()
 

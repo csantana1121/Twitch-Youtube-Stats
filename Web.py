@@ -7,6 +7,7 @@ from turbo_flask import Turbo
 from flask_bcrypt import Bcrypt
 # from flask_behind_proxy import FlaskBehindProxy # Codio solution don't want to use yet
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
+from youtube import *
 
 app = Flask(__name__)
 # proxied = FlaskBehindProxy(app) # Codio solution not yet
@@ -45,9 +46,24 @@ def about():
 def youtube():
     form = Searchuser()
     if form.validate_on_submit():
-        flash(f'Input received as {form.username.data}', 'success')
-        return redirect(url_for('youtube'))
-    return render_template('youtube.html', title='Twitch', form=form)
+        api_key = "AIzaSyCdon2Ht4qsO50eVJpu9nJO5iJx7TSIOhM"
+        channel_id = get_channel_id(api_key, form.username.data)
+        json = get_stats(channel_id, api_key)
+        values = extract_info_json(json)
+        dtfr_without_vals = construct_dtfr()
+        dtfr_with_vals = insert_values_dtfr(dtfr_without_vals, values)
+        result = dtfr_with_vals.to_html()
+        text_file = open("templates/youtubedata.html", "w")
+        text_file.write(result)
+        text_file.close()
+        
+        return render_template('youtube.html', title='Twitch', form=form, image=values[-1], channel_name=values[0],text = values[1])
+    return render_template('youtube.html', title='Twitch', form=form, image='', channel_name='',text ='')
+
+@app.route("/youtube_output")
+def youtube_output():
+    return render_template('youtubedata.html', title='Youtube Results')
+
 
 @app.route("/twitch", methods=['GET', 'POST'])
 def twitch():
