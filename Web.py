@@ -80,42 +80,40 @@ def twitch():
         user_query = get_user_query(form.username.data)
         user_info = get_response(user_query)
 
-        try:
-            user_id = user_info.json()['data'][0]['id']
-            img_url = user_info.json()['data'][0]['profile_image_url']
-            #print(user_id)
-            #print(img_url)
-            user_videos_query = get_user_videos_query(user_id)
-            videos_info = get_response(user_videos_query)
+        
+        user_id = user_info.json()['data'][0]['id']
+        img_url = user_info.json()['data'][0]['profile_image_url']
+        #print(user_id)
+        #print(img_url)
+        user_videos_query = get_user_videos_query(user_id)
+        videos_info = get_response(user_videos_query)
             
-            videos_info_json = videos_info.json()
-            # print(videos_info_json)
-            videos_info_json_data = videos_info_json['data']
-            videos_info_json_data_reversed = videos_info_json_data[::-1]
-            # print(videos_info_json_data_reversed)
+        videos_info_json = videos_info.json()
+        # print(videos_info_json)
+        videos_info_json_data = videos_info_json['data']
+        videos_info_json_data_reversed = videos_info_json_data[::-1]
+        # print(videos_info_json_data_reversed)
             
-            line_labels = []
-            line_values = []
-            title = form.username.data +'\'s Video Stats' 
-            # print(title)
-            for item in videos_info_json_data_reversed:
-                if(len(item['title']) == 0):   
-                    line_labels.append('No Name')
-                elif (len(item['title']) > 20):
-                    line_labels.append(item['title'][:20] + '...')
-                else:
-                    line_labels.append(item['title'])
-                line_values.append(item['view_count'])
-            print('success')
-            print(title)
-            print(line_labels)
-            print(line_values)
-            print(img_url)
-            print(max(line_values) + 10)
-            return render_template('line_chart.html', title=title, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
-        except:
-            flash(f'Error Occured','danger')
-        return redirect(url_for('twitch'))
+        line_labels = []
+        line_values = []
+        title = form.username.data +'\'s Video Stats' 
+        # print(title)
+        for item in videos_info_json_data_reversed:
+            if(len(item['title']) == 0):   
+                line_labels.append('No Name')
+            elif (len(item['title']) > 20):
+                line_labels.append(item['title'][:20] + '...')
+            else:
+                line_labels.append(item['title'])
+            line_values.append(item['view_count'])
+#         print('success')
+#         print(title)
+#         print(line_labels)
+#         print(line_values)
+#         print(img_url)
+#         print(max(line_values) + 10)
+        return render_template('line_chart.html', title=title, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
+        # return redirect(url_for('twitch'))
     return render_template('twitch.html', title='Twitch', form=form)
 
 # @app.route("/twitchchart")
