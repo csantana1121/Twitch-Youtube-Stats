@@ -90,10 +90,9 @@ def print_result():
     playlist_id = get_playlists_id(channel_id, api_key2)
     video_id = get_playlists_items(playlist_id, api_key2)
     url = video_url(video_id)
-    print(url)
+    print(playlist_id)
 #     values = extract_info_json(stats)
 #     dtfr_without_vals = construct_dtfr()
 #     dtfr_with_vals = insert_values_dtfr(dtfr_without_vals, values)
 
-    
 
