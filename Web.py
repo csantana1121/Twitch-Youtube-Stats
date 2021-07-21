@@ -112,7 +112,7 @@ def twitch():
 #         print(line_values)
 #         print(img_url)
 #         print(max(line_values) + 10)
-        return render_template('line_chart.html', title=title, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
+        return render_template('line_chart.html', title=title, form=form, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
         # return redirect(url_for('twitch'))
     return render_template('twitch.html', title='Twitch', form=form)
 
