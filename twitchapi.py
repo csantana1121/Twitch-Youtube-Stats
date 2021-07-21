@@ -12,21 +12,11 @@ test = requests.post(f'https://id.twitch.tv/oauth2/token?client_id={Client_ID}&c
 bearer_token = test
 if bearer_token.lower().startswith('bearer'):
             bearer_token = bearer_token[6:0]
-print(bearer_token)
+# print(bearer_token)
 token = 'Bearer ' + bearer_token.lower().strip()
-print(token)
+# print(token)
 HEADERS = {'Authorization' : token, 'client-id': Client_ID}
-print(HEADERS)
-
-# client = twitch.TwitchHelix(client_id=Client_ID, client_secret=Client_Secret, scopes=[twitch.constants.OAUTH_SCOPE_ANALYTICS_READ_EXTENSIONS])
-# client.get_oauth()
-# client.get_streams()
-# helix = twitch.Helix(Client_ID, Client_Secret)
-
-# for user in helix.users(['sodapoppin', 'reckful', 24250859]):
-#     print(user.display_name)
-#     # print(user.created_at)
-#     print(user.view_count)
+# print(HEADERS)
 
 def get_response(query):
     url = BASE_URL + query
@@ -48,9 +38,11 @@ def get_user_query(user_login):
 def get_user_videos_query(user_id):
     return f'streams?login={0}&first=50'.format(user_id)
 
-user_login = 'gorgc'
+def test_method():
+    user_login = 'gorgc'
 
-query = get_user_query(user_login)
-response = get_response(query)
+    query = get_user_query(user_login)
+    response = get_response(query)
 
-print_response(response)
+    print_response(response)
+
