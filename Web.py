@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-
+    twitch = db.Column(db.String, nullable=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.password}')" 
@@ -72,12 +72,15 @@ def youtube():
 def youtube_output():
     return render_template('youtubedata.html', title='Youtube Results')
 
-
+global TempList
+TempList = []
 @app.route("/twitch", methods=['GET', 'POST'])
 def twitch():
+    global TempList
     form = Searchuser()
     Savetoprofile = SaveSearch()
     if form.validate_on_submit():
+        TempList =[]
         user_query = get_user_query(form.username.data)
         user_info = get_response(user_query)
 
@@ -113,10 +116,17 @@ def twitch():
 #           print(line_values)
 #           print(img_url)
 #           print(max(line_values) + 10)
+            TempList = [title,(max(line_values)+10),line_labels,line_values,img_url]
             return render_template('line_chart.html', title=title, form=form, form2=Savetoprofile, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
         except:
             flash(f'twitch user invalid','danger')
             return render_template('twitch.html', title='Twitch', form=form)
+    if Savetoprofile.validate_on_submit():
+        current_user.twitch = ''.join(str(TempList))
+        db.session.commit()
+        print(current_user.twitch)
+        flash(f'Tracking', 'success')
+        return render_template('line_chart.html', title=TempList[0], form=form, form2=Savetoprofile, max= TempList[1], labels=TempList[2],values=TempList[3],img_url=TempList[4])
     return render_template('twitch.html', title='Twitch', form=form)
 
 # @app.route("/twitchchart")
@@ -132,7 +142,7 @@ def register():
         if username is False:
             mail = db.session.query(User.id).filter_by(email=form.email.data).first() is not None
             if mail is False:
-                user = User(username=form.username.data, email=form.email.data, password=passwordhash)
+                user = User(username=form.username.data, email=form.email.data, password=passwordhash, twitch='None')
                 db.session.add(user)
                 db.session.commit()
                 flash(f'Account created for {form.username.data}!', 'success')
