@@ -41,22 +41,22 @@
     <h2>{{ channel_name }}</h2>
     {% endif %}
     {% if not text=='' %}
-    <p>Description: {{ text }}</p>
+    <span style="background-color: #327D52"><font color="white">Description: </font></span> <p>{{ text }}</p>
     {% endif %}
     {% if not date=='' %}
-    <p>Time of creation: {{ date }}</p>
+    <span style="background-color: #327D52"><font color="white"> Time of creation: </font></span><p>{{ date }}</p>
     {% endif %}
     {% if not country=='' %}
-    <p>Country of Origin: {{ country }}</p>
+    <span style="background-color: #327D52"><font color="white"> Country of Origin: </font></span><p>{{ country }}</p>
     {% endif %}
     {% if not views=='' %}
-    <p>Number of views: {{ views }}</p>
+    <span style="background-color: #327D52"><font color="white"> Number of views: </font></span><p>{{ views }}</p>
     {% endif %}
     {% if not subs=='' %}
-    <p>Number of subscribers: {{ subs }}</p>
+    <span style="background-color: #327D52"><font color="white"> Number of subscribers: </font></span><p>{{ subs }}</p>
     {% endif %}
     {% if not numvids=='' %}
-    <p>Total Videos: {{ numvids }}</p>
+    <span style="background-color: #327D52"><font color="white"> Total Videos: </font></span><p>{{ numvids }}</p>
     {% endif %}
     {% if not vidurl=='' %}
     <iframe width="560" height="315" src= {{vidurl}} frameborder="0" allowfullscreen></iframe>

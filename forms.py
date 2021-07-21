@@ -22,6 +22,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class Searchuser(FlaskForm):
-    username = StringField('Username',
+    username = StringField('Channel name',
                            validators=[DataRequired(), Length(min=2, max=20)])
     submit = SubmitField('Search')
