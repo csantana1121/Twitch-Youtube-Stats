@@ -1,11 +1,11 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import RegistrationForm, LoginForm, Searchuser
+from forms import RegistrationForm, LoginForm, Searchuser, SaveSearch
 from flask_sqlalchemy import SQLAlchemy
 # from audio import printWAV # Audio not used yet
 import time, random, threading
 from turbo_flask import Turbo
 from flask_bcrypt import Bcrypt
-# from flask_behind_proxy import FlaskBehindProxy # Codio solution don't want to use yet
+from flask_behind_proxy import FlaskBehindProxy # Codio solution don't want to use yet
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
 from youtube import *
 from twitchapi import *
@@ -13,7 +13,7 @@ import json
 
 
 app = Flask(__name__)
-# proxied = FlaskBehindProxy(app) # Codio solution not yet
+proxied = FlaskBehindProxy(app) # Codio solution not yet
 
 app.config['SECRET_KEY'] = 'efefdc92b673d6000695ae349d5b853e'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -76,6 +76,7 @@ def youtube_output():
 @app.route("/twitch", methods=['GET', 'POST'])
 def twitch():
     form = Searchuser()
+    Savetoprofile = SaveSearch()
     if form.validate_on_submit():
         user_query = get_user_query(form.username.data)
         user_info = get_response(user_query)
@@ -89,15 +90,15 @@ def twitch():
             videos_info = get_response(user_videos_query)
             
             videos_info_json = videos_info.json()
-            # print(videos_info_json)
+        # print(videos_info_json)
             videos_info_json_data = videos_info_json['data']
             videos_info_json_data_reversed = videos_info_json_data[::-1]
-            # print(videos_info_json_data_reversed)
+        # print(videos_info_json_data_reversed)
             
             line_labels = []
             line_values = []
             title = form.username.data +'\'s Video Stats' 
-            # print(title)
+        # print(title)
             for item in videos_info_json_data_reversed:
                 if(len(item['title']) == 0):   
                     line_labels.append('No Name')
@@ -112,7 +113,7 @@ def twitch():
 #           print(line_values)
 #           print(img_url)
 #           print(max(line_values) + 10)
-            return render_template('line_chart.html', title=title, form=form, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
+            return render_template('line_chart.html', title=title, form=form, form2=Savetoprofile, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
         except:
             flash(f'twitch user invalid','danger')
             return render_template('twitch.html', title='Twitch', form=form)

@@ -25,3 +25,6 @@ class Searchuser(FlaskForm):
     username = StringField('Username',
                            validators=[DataRequired(), Length(min=2, max=20)])
     submit = SubmitField('Search')
+    
+class SaveSearch(FlaskForm):
+    submit = SubmitField('Track this user')

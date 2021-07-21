@@ -33,6 +33,16 @@
          </div>
         </form>
     </div>
+    {% if current_user.is_authenticated %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form2.hidden_tag() }}
+          <div class="form-group">
+            {{ form2.submit(class="btn btn-outline-info") }}
+         </div>
+        </form>
+    </div>
+    {% endif %}
 <html lang="en">
 <head>
   <meta charset="utf-8" />
