@@ -36,7 +36,7 @@ class User(UserMixin, db.Model):
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html', subtitle='Home Page', text='This is the home page')
+    return render_template('home.html', subtitle='A glimpse into some Youtube & Twitch Statistics')
 
 @app.route("/about")
 def about():
@@ -68,7 +68,6 @@ def youtube():
 @app.route("/youtube_output")
 def youtube_output():
     return render_template('youtubedata.html', title='Youtube Results')
-
 
 @app.route("/twitch", methods=['GET', 'POST'])
 def twitch():
