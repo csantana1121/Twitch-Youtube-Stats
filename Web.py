@@ -32,6 +32,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     twitch = db.Column(db.String, nullable=True)
+    twitchlabels = db.Column(db.Integer)
+    twitchvalues = db.Column(db.Integer)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.password}')" 
@@ -72,11 +74,13 @@ def youtube():
 def youtube_output():
     return render_template('youtubedata.html', title='Youtube Results')
 
-global TempList
+global TempList, labellen, vallen
 TempList = []
+labellen = 0
+vallen = 0
 @app.route("/twitch", methods=['GET', 'POST'])
 def twitch():
-    global TempList
+    global TempList, labellen, vallen
     form = Searchuser()
     Savetoprofile = SaveSearch()
     if form.validate_on_submit():
@@ -116,6 +120,8 @@ def twitch():
 #           print(line_values)
             print(img_url)
 #           print(max(line_values) + 10)
+            labellen = len(line_labels)
+            vallen = len(line_values)
             TempList = [title,(max(line_values)+10),line_labels,line_values,img_url]
             return render_template('line_chart.html', title=title, form=form, form2=Savetoprofile, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
         except:
@@ -123,6 +129,8 @@ def twitch():
             return render_template('twitch.html', title='Twitch', form=form)
     if Savetoprofile.validate_on_submit():
         current_user.twitch = ''.join(str(TempList))
+        current_user.twitchlabels = labellen
+        current_user.twitchvalues = vallen
         db.session.commit()
         print(current_user.twitch)
         flash(f'Tracking', 'success')
@@ -142,7 +150,7 @@ def register():
         if username is False:
             mail = db.session.query(User.id).filter_by(email=form.email.data).first() is not None
             if mail is False:
-                user = User(username=form.username.data, email=form.email.data, password=passwordhash, twitch='None')
+                user = User(username=form.username.data, email=form.email.data, password=passwordhash, twitch='None', twitchlabels=0,twitchvalues=0)
                 db.session.add(user)
                 db.session.commit()
                 flash(f'Account created for {form.username.data}!', 'success')
@@ -192,25 +200,31 @@ def profile():
     if current_user.twitch is not 'None':
         Stringdata = current_user.twitch
         res = Stringdata.strip('][').split(', ')
-        labels= res[2:53]
+        index = 3+current_user.twitchlabels
+        labels= res[2:index]
         for i in range(len(labels)):
             labels[i] = labels[i].replace('[','')
             labels[i] = labels[i].replace(']','')
             labels[i] = labels[i].replace("'","")
             labels[i] = labels[i].replace('"','')
-        values= res[53:103]
+        values = []
+        values= res[index:-1]
         for i in range(len(values)):
             values[i] = values[i].replace('[','')
             values[i] = values[i].replace(']','')
+        print(len(res))
+        print(current_user.twitchlabels)
+        print(current_user.twitchvalues)
         print(res[0])
         print(res[1])
         print(res[2])
         print(res[52])
         print(labels)
+        print(len(labels))
         print(values)
-        print(res[103])
-        print(len(res))
-        return render_template('profiledata.html',name=current_user.username, title=res[0].replace('"',''), max= res[1], labels=labels,values=values,img_url=res[103].replace("'",""))
+        print(len(values))
+        print(res[-1])
+        return render_template('profiledata.html',name=current_user.username, title=res[0].replace('"',''), max= res[1], labels=labels,values=values,img_url=res[-1].replace("'",""))
     return render_template('profile.html', name=current_user.username)
 
 @app.route("/logout")
