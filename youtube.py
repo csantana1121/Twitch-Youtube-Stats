@@ -14,15 +14,21 @@ def get_channel_id(api_key, channel):
     response = requests.get(url)
     data = response.json()
     # return (data['items'][0]['id']['channelId'])
-    return (data['items'][0]['id']['channelId'])
+    if data["items"] != []:
+        return (data['items'][0]['id']['channelId'])
+    else:
+        return ""
 
 
 def get_stats(channel_id, api_key):
-    url = 'https://www.googleapis.com/youtube/v3/channels?part=snippet&part=statistics&id=' + \
-        channel_id + "&key=" + api_key
-    response = requests.get(url)
-    data = response.json()
-    return data
+    if channel_id != "":
+        url = 'https://www.googleapis.com/youtube/v3/channels?part=snippet&part=statistics&id=' + \
+            channel_id + "&key=" + api_key
+        response = requests.get(url)
+        data = response.json()
+        return data
+    else:
+        return ""
 
 # https://www.youtube.com/watch?v=
 # https://www.youtube.com/playlist?list=
@@ -30,49 +36,61 @@ def get_stats(channel_id, api_key):
 
 def get_playlists_id(channel_id, api_key):
     #    url = "https://www.googleapis.com/youtube/v3/playlists?part=contentDetails&part=id&id=" + channel_id + "&key=" + api_key
-    url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId=" + \
-        channel_id + "&maxResults=1&key=" + api_key
-    response = requests.get(url)
-    data = response.json()
-    playlist_id = data['items'][0]['id']
-    return playlist_id
+    if channel_id != "":
+        url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId=" + \
+            channel_id + "&maxResults=1&key=" + api_key
+        response = requests.get(url)
+        data = response.json()
+        playlist_id = ""
+        if data['items'] != []:
+            playlist_id = data['items'][0]['id']
+        return playlist_id
+    else:
+        return ""
+    
 
 
 def get_playlists_items(playlist_id, api_key):
     #    url = "https://www.googleapis.com/youtube/v3/playlists?part=contentDetails&part=id&id=" + channel_id + "&key=" + api_key
-    url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=" + \
-        playlist_id + "&maxResults=1&key=" + api_key
-    response = requests.get(url)
-    data = response.json()
-    video_id = data['items'][0]['contentDetails']['videoId']
-    return video_id
+    if playlist_id != "":
+        url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=" + \
+            playlist_id + "&maxResults=1&key=" + api_key
+        response = requests.get(url)
+        data = response.json()
+        video_id = data['items'][0]['contentDetails']['videoId']
+        return video_id
+    else:
+        return ""
 
 
 def extract_info_json(data):
-    channel_name = data['items'][0]['snippet']['title']
+    if data != "":
+        channel_name = data['items'][0]['snippet']['title']
 
-    description = data['items'][0]['snippet']['description']
+        description = data['items'][0]['snippet']['description']
 
-    key = 'country'
-    country = ""
-    if key in data['items'][0]['snippet']:
-        country = data['items'][0]['snippet']['country']
+        key = 'country'
+        country = ""
+        if key in data['items'][0]['snippet']:
+            country = data['items'][0]['snippet']['country']
 
-    num_views = data['items'][0]['statistics']['viewCount']
+        num_views = data['items'][0]['statistics']['viewCount']
 
-    num_subscribers = ""
-    if data['items'][0]['statistics']['hiddenSubscriberCount'] is False:
-        num_subscribers = data['items'][0]['statistics']['subscriberCount']
+        num_subscribers = ""
+        if data['items'][0]['statistics']['hiddenSubscriberCount'] is False:
+            num_subscribers = data['items'][0]['statistics']['subscriberCount']
 
-    num_videos = data['items'][0]['statistics']['videoCount']
+        num_videos = data['items'][0]['statistics']['videoCount']
 
-    date_creation = data['items'][0]['snippet']['publishedAt'].replace(
-        'T', ' ')
-    date_creation = date_creation.replace('Z', ' UTC')
+        date_creation = data['items'][0]['snippet']['publishedAt'].replace(
+            'T', ' ')
+        date_creation = date_creation.replace('Z', ' UTC')
 
-    photo_url = data['items'][0]['snippet']['thumbnails']['default']['url']
+        photo_url = data['items'][0]['snippet']['thumbnails']['default']['url']
 
-    return channel_name, description, country, num_views, num_subscribers, num_videos, date_creation, photo_url
+        return channel_name, description, country, num_views, num_subscribers, num_videos, date_creation, photo_url
+    else:
+        return []
 
 
 def construct_dtfr():
@@ -95,7 +113,10 @@ def insert_values_dtfr(dtfr, values):
 
 
 def video_url(video_id):
-    return "https://www.youtube.com/embed/" + video_id
+    if video_id != "":
+        return "https://www.youtube.com/embed/" + video_id
+    else:
+        return ""
 
 
 def print_result():
