@@ -29,3 +29,9 @@ class Searchuser(FlaskForm):
     username = StringField('Channel name',
                            validators=[DataRequired(), Length(min=2, max=20)])
     submit = SubmitField('Search')
+<<<<<<< HEAD
+=======
+    
+class SaveSearch(FlaskForm):
+    submit = SubmitField('Track this user')
+>>>>>>> 247ab1a23db2f56fb785826810487c3e2f55c741
