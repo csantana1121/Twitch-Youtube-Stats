@@ -59,6 +59,9 @@
     <span style="background-color: #327D52"><font color="white"> Total Videos: </font></span><p>{{ numvids }}</p>
     {% endif %}
     {% if not vidurl=='' %}
+    <span style="background-color: #327D52"><font color="white"> Sample Video of this channel: </font></span>
+    <br>
+    <br>
     <iframe width="560" height="315" src= {{vidurl}} frameborder="0" allowfullscreen></iframe>
     {% endif %}
 {% endblock content %}
