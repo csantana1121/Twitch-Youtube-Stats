@@ -1,7 +1,10 @@
-import unittest, sys, os
+from Web import app, db
+import unittest
+import sys
+import os
 
 sys.path.append('../Twitch-Youtube-Stats')
-from Web import app, db
+
 
 class UsersTests(unittest.TestCase):
 
@@ -18,11 +21,11 @@ class UsersTests(unittest.TestCase):
 
     def register(self, username, email, password):
         return self.app.post('/register',
-                            data=dict(username=username,
-                                      email=email,
-                                      password=password, 
-                                      confirm_password=password),
-                            follow_redirects=True)
+                             data=dict(username=username,
+                                       email=email,
+                                       password=password,
+                                       confirm_password=password),
+                             follow_redirects=True)
 
     def test_valid_user_registration(self):
         response = self.register('test', 'test@example.com', 'FlaskIsAwesome')
@@ -30,15 +33,23 @@ class UsersTests(unittest.TestCase):
 
     def test_invalid_username_registration(self):
         response = self.register('t', 'test@example.com', 'FlaskIsAwesome')
-        self.assertIn(b'Field must be between 2 and 20 characters long.', response.data)
-        response = self.register('Thisislongerthan20characters', 'test@example.com', 'FlaskIsAwesome')
-        self.assertIn(b'Field must be between 2 and 20 characters long.', response.data)
+        self.assertIn(
+            b'Field must be between 2 and 20 characters long.',
+            response.data)
+        response = self.register(
+            'Thisislongerthan20characters',
+            'test@example.com',
+            'FlaskIsAwesome')
+        self.assertIn(
+            b'Field must be between 2 and 20 characters long.',
+            response.data)
 
     def test_invalid_email_registration(self):
         response = self.register('test2', 'test@example', 'FlaskIsAwesome')
         self.assertIn(b'Invalid email address.', response.data)
         response = self.register('test2', 'testexample.com', 'FlaskIsAwesome')
         self.assertIn(b'Invalid email address.', response.data)
+
 
 if __name__ == "__main__":
     unittest.main()
