@@ -121,7 +121,7 @@ def twitch():
             TempList = [title,(max(line_values)+10),line_labels,line_values,img_url]
             return render_template('line_chart.html', title=title, form=form, form2=Savetoprofile, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
         except:
-            flash(f'twitch user invalid','danger')
+            flash(f'Twitch username invalid/no data found','danger')
             return render_template('twitch.html', title='Twitch', form=form)
     if Savetoprofile.validate_on_submit():
         current_user.twitch = streamer
