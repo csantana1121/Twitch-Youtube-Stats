@@ -9,7 +9,8 @@ from turbo_flask import Turbo
 from flask_bcrypt import Bcrypt
 # Codio solution don't want to use yet
 from flask_behind_proxy import FlaskBehindProxy
-from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
+from flask_login import UserMixin, LoginManager, login_user, logout_user, \
+    current_user, login_required
 from youtube import *
 from twitchapi import *
 import json
@@ -222,10 +223,12 @@ def register():
                 flash(f'Account created for {form.username.data}!', 'success')
                 return redirect(url_for('home'))  # if so - send to home page
             else:
-                flash(f'That email is already taken please try another', 'danger')
+                flash(f'That email is already taken please try another',
+                      'danger')
                 return redirect(url_for('register'))
         else:
-            flash(f'That username is already taken please try another', 'danger')
+            flash(f'That username is already taken please try another',
+                  'danger')
             return redirect(url_for('register'))
     return render_template('register.html', title='Register', form=form)
 
