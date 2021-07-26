@@ -11,7 +11,8 @@ INDENT = 2
 AUTH_URL = 'https://id.twitch.tv/oauth2/token'
 
 test = requests.post(
-    f'https://id.twitch.tv/oauth2/token?client_id={Client_ID}&client_secret={Client_Secret}&grant_type=client_credentials').json()['access_token']
+    f'https://id.twitch.tv/oauth2/token?client_id={Client_ID}&client_secret=' +
+    f'{Client_Secret}&grant_type=client_credentials').json()['access_token']
 bearer_token = test
 if bearer_token.lower().startswith('bearer'):
     bearer_token = bearer_token[6:0]
