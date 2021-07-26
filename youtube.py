@@ -47,7 +47,6 @@ def get_playlists_id(channel_id, api_key):
         return playlist_id
     else:
         return ""
-    
 
 
 def get_playlists_items(playlist_id, api_key):

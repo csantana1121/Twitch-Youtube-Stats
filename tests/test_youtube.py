@@ -1,4 +1,6 @@
 import unittest
+import sys
+sys.path.append('../Twitch-Youtube-Stats')
 from youtube import *
 
 

@@ -1,10 +1,9 @@
-from Web import app, db
 import unittest
 import sys
 import os
 
 sys.path.append('../Twitch-Youtube-Stats')
-
+from Web import app, db
 
 class UsersTests(unittest.TestCase):
 

@@ -1,10 +1,9 @@
-from Web import app  # imports flask app object
 import unittest
 import sys
 
 # imports python file from parent directory
 sys.path.append('../Twitch-Youtube-Stats')
-
+from Web import app  # imports flask app object
 
 class BasicTests(unittest.TestCase):
 

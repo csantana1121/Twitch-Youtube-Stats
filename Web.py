@@ -7,7 +7,8 @@ import random
 import threading
 from turbo_flask import Turbo
 from flask_bcrypt import Bcrypt
-from flask_behind_proxy import FlaskBehindProxy # Codio solution don't want to use yet
+# Codio solution don't want to use yet
+from flask_behind_proxy import FlaskBehindProxy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, current_user, login_required
 from youtube import *
 from twitchapi import *
@@ -15,7 +16,7 @@ import json
 
 
 app = Flask(__name__)
-proxied = FlaskBehindProxy(app) # Codio solution not yet
+proxied = FlaskBehindProxy(app)  # Codio solution not yet
 
 app.config['SECRET_KEY'] = 'efefdc92b673d6000695ae349d5b853e'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -109,16 +110,19 @@ def youtube():
 def youtube_output():
     return render_template('youtubedata.html', title='Youtube Results')
 
+
 global TempList, streamer
 streamer = ''
 TempList = []
+
+
 @app.route("/twitch", methods=['GET', 'POST'])
 def twitch():
     global TempList, streamer
     form = Searchuser()
     Savetoprofile = SaveSearch()
     if form.validate_on_submit():
-        TempList =[]
+        TempList = []
         streamer = form.username.data
         user_query = get_user_query(form.username.data)
         user_info = get_response(user_query)
@@ -136,10 +140,10 @@ def twitch():
             videos_info_json_data = videos_info_json['data']
             videos_info_json_data_reversed = videos_info_json_data[::-1]
         # print(videos_info_json_data_reversed)
-            
+
             line_labels = []
             line_values = []
-            title = form.username.data +'\'s Video Stats' 
+            title = form.username.data + '\'s Video Stats'
         # print(title)
             for item in videos_info_json_data_reversed:
                 if(len(item['title']) == 0):
@@ -155,17 +159,38 @@ def twitch():
 #           print(line_values)
         #   print(img_url)
 #           print(max(line_values) + 10)
-            TempList = [title,(max(line_values)+10),line_labels,line_values,img_url]
-            return render_template('line_chart.html', title=title, form=form, form2=Savetoprofile, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
-        except:
-            flash(f'Twitch username invalid/no data found','danger')
+            TempList = [
+                title,
+                (max(line_values) + 10),
+                line_labels,
+                line_values,
+                img_url]
+            return render_template(
+                'line_chart.html',
+                title=title,
+                form=form,
+                form2=Savetoprofile,
+                max=max(line_values) + 10,
+                labels=line_labels,
+                values=line_values,
+                img_url=img_url)
+        except BaseException:
+            flash(f'Twitch username invalid/no data found', 'danger')
             return render_template('twitch.html', title='Twitch', form=form)
     if Savetoprofile.validate_on_submit():
         current_user.twitch = streamer
         db.session.commit()
         print(current_user.twitch)
         flash(f'Tracking', 'success')
-        return render_template('line_chart.html', title=TempList[0], form=form, form2=Savetoprofile, max= TempList[1], labels=TempList[2],values=TempList[3],img_url=TempList[4])
+        return render_template(
+            'line_chart.html',
+            title=TempList[0],
+            form=form,
+            form2=Savetoprofile,
+            max=TempList[1],
+            labels=TempList[2],
+            values=TempList[3],
+            img_url=TempList[4])
     return render_template('twitch.html', title='Twitch', form=form)
 
 # @app.route("/twitchchart")
@@ -187,7 +212,11 @@ def register():
             mail = db.session.query(User.id).filter_by(
                 email=form.email.data).first() is not None
             if mail is False:
-                user = User(username=form.username.data, email=form.email.data, password=passwordhash, twitch='None')
+                user = User(
+                    username=form.username.data,
+                    email=form.email.data,
+                    password=passwordhash,
+                    twitch='None')
                 db.session.add(user)
                 db.session.commit()
                 flash(f'Account created for {form.username.data}!', 'success')
@@ -251,23 +280,23 @@ def profile():
         try:
             user_id = user_info.json()['data'][0]['id']
             img_url = user_info.json()['data'][0]['profile_image_url']
-            #print(user_id)
-            #print(img_url)
+            # print(user_id)
+            # print(img_url)
             user_videos_query = get_user_videos_query(user_id)
             videos_info = get_response(user_videos_query)
-            
+
             videos_info_json = videos_info.json()
         # print(videos_info_json)
             videos_info_json_data = videos_info_json['data']
             videos_info_json_data_reversed = videos_info_json_data[::-1]
         # print(videos_info_json_data_reversed)
-            
+
             line_labels = []
             line_values = []
-            title = current_user.twitch +'\'s Video Stats' 
+            title = current_user.twitch + '\'s Video Stats'
         # print(title)
             for item in videos_info_json_data_reversed:
-                if(len(item['title']) == 0):   
+                if(len(item['title']) == 0):
                     line_labels.append('No Name')
                 elif (len(item['title']) > 20):
                     line_labels.append(item['title'][:20] + '...')
@@ -280,8 +309,15 @@ def profile():
 #           print(line_values)
         #   print(img_url)
 #           print(max(line_values) + 10)
-            return render_template('profiledata.html', name=current_user.username,title=title, max= max(line_values) + 10, labels=line_labels,values=line_values,img_url=img_url)
-        except:
+            return render_template(
+                'profiledata.html',
+                name=current_user.username,
+                title=title,
+                max=max(line_values) + 10,
+                labels=line_labels,
+                values=line_values,
+                img_url=img_url)
+        except BaseException:
             pass
     return render_template('profile.html', name=current_user.username)
 

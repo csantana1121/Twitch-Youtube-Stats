@@ -33,4 +33,3 @@ class Searchuser(FlaskForm):
 
 class SaveSearch(FlaskForm):
     submit = SubmitField('Track this user')
-
