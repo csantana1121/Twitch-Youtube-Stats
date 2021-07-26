@@ -8,7 +8,8 @@ def get_input():
 
 
 def get_channel_id(api_key, channel):
-    url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&maxResults=1&q=" + \
+    url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=" + \
+        "channel&maxResults=1&q=" + \
         channel + "&key=" + api_key
 
     response = requests.get(url)
@@ -22,7 +23,8 @@ def get_channel_id(api_key, channel):
 
 def get_stats(channel_id, api_key):
     if channel_id != "":
-        url = 'https://www.googleapis.com/youtube/v3/channels?part=snippet&part=statistics&id=' + \
+        url = 'https://www.googleapis.com/youtube/v3/channels?part=snippet' + \
+            '&part=statistics&id=' + \
             channel_id + "&key=" + api_key
         response = requests.get(url)
         data = response.json()
@@ -35,9 +37,11 @@ def get_stats(channel_id, api_key):
 
 
 def get_playlists_id(channel_id, api_key):
-    #    url = "https://www.googleapis.com/youtube/v3/playlists?part=contentDetails&part=id&id=" + channel_id + "&key=" + api_key
+    #    url = "https://www.googleapis.com/youtube/v3/playlists?part=" + \
+    #        "contentDetails&part=id&id=" + channel_id + "&key=" + api_key
     if channel_id != "":
-        url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId=" + \
+        url = "https://www.googleapis.com/youtube/v3/playlists?part=" + \
+            "snippet,contentDetails&channelId=" + \
             channel_id + "&maxResults=1&key=" + api_key
         response = requests.get(url)
         data = response.json()
@@ -50,9 +54,11 @@ def get_playlists_id(channel_id, api_key):
 
 
 def get_playlists_items(playlist_id, api_key):
-    #    url = "https://www.googleapis.com/youtube/v3/playlists?part=contentDetails&part=id&id=" + channel_id + "&key=" + api_key
+    #    url = "https://www.googleapis.com/youtube/v3/playlists?part=" + \
+    #        "contentDetails&part=id&id=" + channel_id + "&key=" + api_key
     if playlist_id != "":
-        url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=" + \
+        url = "https://www.googleapis.com/youtube/v3/playlistItems?part=" + \
+            "snippet,contentDetails&playlistId=" + \
             playlist_id + "&maxResults=1&key=" + api_key
         response = requests.get(url)
         data = response.json()
@@ -87,7 +93,8 @@ def extract_info_json(data):
 
         photo_url = data['items'][0]['snippet']['thumbnails']['default']['url']
 
-        return channel_name, description, country, num_views, num_subscribers, num_videos, date_creation, photo_url
+        return channel_name, description, country, num_views, \
+            num_subscribers, num_videos, date_creation, photo_url
     else:
         return []
 
