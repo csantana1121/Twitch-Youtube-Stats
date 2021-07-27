@@ -92,7 +92,7 @@ def youtube():
                                    numvids=values[5],
                                    vidurl=video)
         else:
-            flash(f'Channel unavalaible', 'danger')
+            flash(f'Channel unavailable', 'danger')
     return render_template(
         'youtube.html',
         title='Twitch',
