@@ -21,6 +21,7 @@ proxied = FlaskBehindProxy(app)  # Codio solution not yet
 
 app.config['SECRET_KEY'] = 'efefdc92b673d6000695ae349d5b853e'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 bcrypt = Bcrypt(app)
@@ -208,10 +209,10 @@ def register():
         passwordhash = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
         username = db.session.query(User.id).filter_by(
-            username=form.username.data).first() != None
+            username=form.username.data).first() is not None
         if username is False:
             mail = db.session.query(User.id).filter_by(
-                email=form.email.data).first() != None
+                email=form.email.data).first() is not None
             if mail is False:
                 user = User(
                     username=form.username.data,
