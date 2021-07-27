@@ -208,10 +208,10 @@ def register():
         passwordhash = bcrypt.generate_password_hash(
             form.password.data).decode('utf-8')
         username = db.session.query(User.id).filter_by(
-            username=form.username.data).first() is not None
+            username=form.username.data).first() != None
         if username is False:
             mail = db.session.query(User.id).filter_by(
-                email=form.email.data).first() is not None
+                email=form.email.data).first() != None
             if mail is False:
                 user = User(
                     username=form.username.data,
