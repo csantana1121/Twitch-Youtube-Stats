@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 import time
 import random
 import threading
-from turbo_flask import Turbo
+# from turbo_flask import Turbo
 from flask_bcrypt import Bcrypt
 # Codio solution don't want to use yet
 from flask_behind_proxy import FlaskBehindProxy
